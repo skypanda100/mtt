@@ -46,7 +46,7 @@
                :columns="foodColumns"
                :data="foodData">
         </Table>
-        <p>合计金额：{{ totalPrice }}元</p>
+        <p>合计金额：{{ totalPrice.toFixed(2) }}元</p>
         <Row style="background:#eee;padding:5px" v-for="i in Math.ceil(nutritions.length / 12)">
             <i-col span="2" v-for="j in (nutritions.length - (i - 1) * 12) > 12 ? 12 : (nutritions.length - (i - 1) * 12)">
                 <Card shadow>
