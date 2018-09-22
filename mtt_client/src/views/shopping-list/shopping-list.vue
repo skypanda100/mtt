@@ -4,6 +4,13 @@
 
 <template>
     <div>
+        <Modal
+                v-model="deletable"
+                title="删除确认"
+                :mask-closable="false"
+                @on-ok="saveOrDelete">
+            <p>保存时没有一行被选中代表删除数据，是否删除？</p>
+        </Modal>
         <Modal v-model="editable" width="360">
             <p slot="header" style="color:#060;text-align:center">
                 <span>编辑order</span>
@@ -69,6 +76,7 @@
                 date: new Date(),
                 totalPrice: 0,
                 totalWeight: [],
+                deletable: false,
                 editable: false,
                 editOrder: {
                     index: -1,
@@ -277,6 +285,14 @@
             },
             handleSave () {
                 let selectedData = this.$refs.selection.getSelection();
+                if (selectedData.length === 0) {
+                    this.deletable = true;
+                } else {
+                    this.saveOrDelete();
+                }
+            },
+            saveOrDelete () {
+                let selectedData = this.$refs.selection.getSelection();
                 let dateFmt = util.formatDate(this.date, 'yyyy-MM-dd');
                 let param = {
                     date: dateFmt,
@@ -290,7 +306,7 @@
                     });
                 });
 
-                saveOrders({ 'data': param }).then(response => {
+                saveOrders({'data': param}).then(response => {
                     console.log(response);
                     this.$Message.success(response.data.message);
                 });
