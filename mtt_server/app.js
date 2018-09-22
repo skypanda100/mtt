@@ -7,6 +7,7 @@ var usersRouter = require('./routes/users');
 var foodsRouter = require('./routes/foods');
 var nutritionsRouter = require('./routes/nutritions');
 var ordersRouter = require('./routes/orders');
+var foodGradesRouter = require('./routes/foodGrades');
 
 var mongoose = require('./config/mongoose.js');
 var db = mongoose();
@@ -32,6 +33,7 @@ app.use('/foods', foodsRouter);
 app.use('/users', usersRouter);
 app.use('/nutritions', nutritionsRouter);
 app.use('/orders', ordersRouter);
+app.use('/foodGrades', foodGradesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
