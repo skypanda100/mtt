@@ -3,13 +3,11 @@ var router = express.Router();
 var util = require('../libs/util');
 var FoodGrade = require('../models/FoodGrade');
 var multer  = require('multer')
-
-const nginxPath = 'D:/nginx-1.11.13/nginx-1.11.13/html/';
-const storagePath = 'upload/';
+var config = require('../config/config');
 
 const storage = multer.diskStorage({
     destination (req, res, cb) {
-        cb(null, nginxPath + storagePath);
+        cb(null, config.nginxPath + config.storagePath);
     },
     filename (req, file, cb) {
         var dateTime = util.formatDate(new Date(), 'yyyyMMddhhmmss');
