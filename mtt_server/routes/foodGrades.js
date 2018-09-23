@@ -18,7 +18,7 @@ const upload = multer({storage}).any();
 
 router.put('/', upload, function (req, res, next) {
     var data = req.body;
-    data.imagePath = storagePath + req.files[0].filename;
+    data.imagePath = config.storagePath + req.files[0].filename;
     var foodGrade = new FoodGrade(
         data
     );
