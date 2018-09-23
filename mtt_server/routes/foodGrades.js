@@ -38,7 +38,14 @@ router.put('/', upload, function (req, res, next) {
 
 
 router.get('/', function (req, res, next) {
-    FoodGrade.find(null, null, {sort: {"dateTime": 1}}, (err, docs) => {
+    var query = req.query;
+    var sortStr = query.sort.substr(0, 1);
+    var sort = sortStr == '-' ? -1 : 1;
+    var field = query.sort.substr(1);
+    var sortObj = {sort: {}};
+    sortObj.sort[field] = sort;
+
+    FoodGrade.find(null, null, sortObj, (err, docs) => {
         if (err) {
             next({
                 status: 500,
