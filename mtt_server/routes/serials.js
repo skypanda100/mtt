@@ -3,17 +3,20 @@ var router = express.Router();
 var Serial = require('../models/Serial');
 var util = require('../libs/util');
 
-router.get('/', function (req, res, next) {
-    // Serial.find(null, null, {sort: {"no": 1}}, (err, docs) => {
-	// 	if (err) {
-	// 		next({
-	// 			status: 500,
-	// 			message: 'server or db error'
-	// 		});
-	// 	} else {
-	// 		res.json(docs);
-	// 	}
-	// });
+router.get('/last', function (req, res, next) {
+    var time = new Date().getTime();
+    var dateTime = util.formatDate(new Date(time - 60 * 20 * 1000), 'yyyy-MM-dd hh:mm:ss');
+
+    Serial.find({dateTime: {"$gt": dateTime}}, null, {sort: "-dateTime"}, (err, docs) => {
+		if (err) {
+			next({
+				status: 500,
+				message: 'server or db error'
+			});
+		} else {
+			res.json(docs[0]);
+		}
+	});
 });
 
 
