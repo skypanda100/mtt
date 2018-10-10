@@ -25,7 +25,7 @@ router.get('/last', function (req, res, next) {
 
 router.get('/history', function (req, res, next) {
     var time = new Date().getTime();
-    var dateTime = util.formatDate(new Date(time - 1000 * 3600 * 24 * 7), 'yyyy-MM-dd hh:mm:ss');
+    var dateTime = util.formatDate(new Date(time - 1000 * 3600 * 24 * 15), 'yyyy-MM-dd hh:mm:ss');
 
     Serial.find({dateTime: {"$gt": dateTime}}, null, {sort: "+dateTime"}, (err, docs) => {
         if (err) {
