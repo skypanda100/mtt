@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/User');// 引入模型
 var jwt = require('jsonwebtoken');
+var SHA256 = require("crypto-js/sha256");
+var Base64 = require('crypto-js/enc-base64');
 var config = require('../config/config');
 
 function generateToken(data){
@@ -19,6 +21,7 @@ function generateToken(data){
 router.post('/token', function (req, res, next) {
     let data = req.body;
     let {username, password} = data;
+    console.log(Base64.stringify(SHA256('Dicaprio1028')));
     User.findOne({
         username: username,
         password: password
@@ -26,10 +29,19 @@ router.post('/token', function (req, res, next) {
         if (err) {
             next({
                 status: 500,
-                message:'username or password error!'
+                message:'server or db error'
             });
         } else {
-            res.json(doc);
+            if (doc) {
+                res.json({
+                    token: generateToken({user: doc.username})
+                });
+            } else {
+                next({
+                    status: 500,
+                    message:'username or password error'
+                });
+            }
         }
     })
 });
