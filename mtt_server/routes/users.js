@@ -34,6 +34,7 @@ router.post('/token', function (req, res, next) {
         } else {
             if (doc) {
                 res.json({
+                    alias: doc.alias,
                     avatar: doc.avatar,
                     token: generateToken(doc.username)
                 });
