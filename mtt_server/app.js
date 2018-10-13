@@ -31,7 +31,7 @@ app.all("*", function (req, res, next) {
 // 拦截所有请求（必须放在各个router之前）
 app.all('/*', function (req, res, next) {
 	if (req.method.indexOf('OPTIONS') < 0) {
-        if (req.url.indexOf('/users/token') < 0) {
+        if (req.url.indexOf('/users/token') < 0 && req.url.indexOf('/serials') < 0) {
             let token = req.headers['mtt-token'];
             if (!util.isNull(token)) {
                 jwt.verify(token, config.secret, function (err, decoded) {
