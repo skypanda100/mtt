@@ -1,6 +1,9 @@
 var express = require('express');
 var logger = require('morgan');
+var jwt = require('jsonwebtoken');
 
+var config = require('./config/config');
+var util = require('./libs/util');
 var testdbRouter = require('./routes/testdb');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,7 +24,39 @@ app.all("*", function (req, res, next) {
 	res.header("Access-Control-Allow-Credentials", true);// Allow Cookie
 	res.header("Access-Control-Allow-Headers", "mtt-token, X-Requested-With, Content-Type");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-	next();
+
+    next();
+});
+
+// 拦截所有请求（必须放在各个router之前）
+app.all('/*', function (req, res, next) {
+	if (req.method.indexOf('OPTIONS') < 0) {
+        if (req.url.indexOf('/users/token') < 0) {
+            let token = req.headers['mtt-token'];
+            if (!util.isNull(token)) {
+                jwt.verify(token, config.secret, function (err, decoded) {
+                    if (!err){
+                        console.log(decoded.user);  //如果过了期限，则有错误。
+	                    next();
+                    } else {
+                        next({
+                            status: 500,
+                            message: 'no access'
+                        });
+                    }
+                });
+            } else {
+                next({
+                    status: 500,
+                    message: 'no access'
+                });
+            }
+        } else {
+        	next();
+        }
+	} else {
+        next();
+    }
 });
 
 app.use(logger('dev'));

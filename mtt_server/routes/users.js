@@ -6,14 +6,14 @@ var SHA256 = require("crypto-js/sha256");
 var Base64 = require('crypto-js/enc-base64');
 var config = require('../config/config');
 
-function generateToken(data){
+function generateToken(user){
     let created = Math.floor(Date.now() / 1000);
-    let cert = config.cert;//私钥
 
     let token = jwt.sign({
-        data,
-        exp: created + 3600 * 24 * 7
-    }, cert, {algorithm: 'RS256'});
+        user: user
+    }, config.secret, {
+        expiresIn: created + 3600 * 24 * 7 //到期时间
+    });
 
     return token;
 }
@@ -21,7 +21,7 @@ function generateToken(data){
 router.post('/token', function (req, res, next) {
     let data = req.body;
     let {username, password} = data;
-    console.log(Base64.stringify(SHA256('Dicaprio1028')));
+    // console.log(Base64.stringify(SHA256('Dicaprio1028')));
     User.findOne({
         username: username,
         password: password
@@ -34,7 +34,7 @@ router.post('/token', function (req, res, next) {
         } else {
             if (doc) {
                 res.json({
-                    token: generateToken({user: doc.username})
+                    token: generateToken(doc.username)
                 });
             } else {
                 next({
