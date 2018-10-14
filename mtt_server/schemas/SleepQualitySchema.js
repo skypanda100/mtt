@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 //创建Schema
 var sleepQualitySchema = new Schema({
 	user: String,
-	sleepDate: String,
+    date: String,
     sleepStart: String,
     sleepEnd: String,
     sumSleep: Number,

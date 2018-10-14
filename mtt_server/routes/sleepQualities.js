@@ -3,10 +3,48 @@ var router = express.Router();
 var SleepQuality = require('../models/SleepQuality');
 var util = require('../libs/util');
 
+function getAllTimes () {
+	let times = [];
+	let nowDate = new Date();
+	for (let i = 0;i < 30;i++) {
+		let date = new Date(nowDate.getTime() - i * 24 * 3600 * 1000);
+		times.push(util.formatDate(date, 'yyyy-MM-dd'));
+	}
+	return times;
+}
+
+router.get('/undo', function (req, res, next) {
+	if (!util.isNull(req.query.user)) {
+		let user = req.query.user;
+        let times = getAllTimes();
+        SleepQuality.find({user: user, date: {"$gte": times[times.length - 1]}}, null, {sort: '-date'}, (err, docs) => {
+            if (err) {
+                next({
+                    status: 500,
+                    message: 'server or db error'
+                });
+            } else {
+            	docs.map(doc => {
+            		let index = times.indexOf(doc.date);
+            		if (index > -1) {
+            			times.splice(index, 1);
+		            }
+	            });
+                res.json(times);
+            }
+        });
+	} else {
+        next({
+            status: 500,
+            message: 'argument error'
+        });
+    }
+});
+
 router.post('/', function (req, res, next) {
 	if (!util.isNull(req.body)) {
 		let data = req.body;
-		SleepQuality.remove({user: data.user, sleepDate : data.sleepDate}, function (err, resp) {
+		SleepQuality.remove({user: data.user, date: data.date}, function (err, resp) {
 			if (err) {
 				next({
 					status: 500,
