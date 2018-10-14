@@ -12,6 +12,7 @@ var nutritionsRouter = require('./routes/nutritions');
 var ordersRouter = require('./routes/orders');
 var foodGradesRouter = require('./routes/foodGrades');
 var serialsRouter = require('./routes/serials');
+var sleepQualitiesRouter = require('./routes/sleepQualities');
 
 var mongoose = require('./config/mongoose.js');
 var db = mongoose();
@@ -36,7 +37,7 @@ app.all('/*', function (req, res, next) {
             if (!util.isNull(token)) {
                 jwt.verify(token, config.secret, function (err, decoded) {
                     if (!err){
-                        console.log(decoded.user);  //如果过了期限，则有错误。
+                        // console.log(decoded.user);  //如果过了期限，则有错误。
 	                    next();
                     } else {
                         next({
@@ -71,6 +72,7 @@ app.use('/nutritions', nutritionsRouter);
 app.use('/orders', ordersRouter);
 app.use('/foodGrades', foodGradesRouter);
 app.use('/serials', serialsRouter);
+app.use('/sleepQualities', sleepQualitiesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
