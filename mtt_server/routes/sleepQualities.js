@@ -54,17 +54,7 @@ router.get('/last', function (req, res, next) {
                     message: 'server or db error'
                 });
             } else {
-            	let results = [];
-                docs.map(doc => {
-                    results.push({
-	                    user: doc.user,
-	                    date: doc.date,
-	                    sumSleep: doc.sumSleep,
-	                    sumDeepSleep: doc.sumDeepSleep,
-	                    sumAwake: doc.sumAwake
-                    });
-                });
-                res.json(results);
+                res.json(docs);
             }
         });
     } else {
