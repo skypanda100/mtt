@@ -21,7 +21,7 @@ function generateToken(user){
 router.post('/token', function (req, res, next) {
     let data = req.body;
     let {username, password} = data;
-    // console.log(Base64.stringify(SHA256('Dicaprio1028')));
+    // console.log(Base64.stringify(SHA256('gaoge100')));
     User.findOne({
         username: username,
         password: password
@@ -49,18 +49,23 @@ router.post('/token', function (req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-	User.findOne({ //查找一条
-		username: 'admin',
-		password: '123'
-	}, (err, doc) => {
+router.get('/all', function (req, res, next) {
+	User.find(null, null, (err, docs) => {
 		if (err) {
 			next({
 				status: 500,
 				message:'server or db error'
 			});
 		} else {
-			res.json(doc);
+		    let results = [];
+		    docs.map(doc => {
+                results.push({
+                    username: doc.username,
+                    avatar: doc.avatar/* + '?timestamp=' + new Date().getTime()*/,
+                    alias: doc.alias
+                })
+            });
+			res.json(results);
 		}
 	})
 });
