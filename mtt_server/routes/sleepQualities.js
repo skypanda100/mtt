@@ -47,7 +47,7 @@ router.get('/last', function (req, res, next) {
         let user = req.query.user;
         let days = req.query.days;
         let times = getAllTimes(days);
-        SleepQuality.find({user: user, date: {"$gte": times[times.length - 1]}}, null, {sort: '+date'}, (err, docs) => {
+        SleepQuality.find({user: {$in: user}, date: {"$gte": times[times.length - 1]}}, null, {sort: '+date'}, (err, docs) => {
             if (err) {
                 next({
                     status: 500,
